@@ -15,10 +15,7 @@ static pthread_mutex_t mutex; // needed to run with multi-threaded version of OD
 
 typedef enum {STATIONARY_1, STATIONARY_2} states;
 
-static dBodyID robot_body {};
-static dBodyID floor_body {};
-static dBodyID sphere1_body {};
-static dBodyID sphere2_body {};
+static dBodyID floorBody {};
 std::unordered_set<dJointID> joints {};
 
 
@@ -33,12 +30,23 @@ std::unordered_set<dJointID> joints {};
  *  5. Then reload the world: the plugin should now load and execute with the current simulation
  */
 
+std::string flippyBodyName(int flippyNum, int sphereNum){
+  std::string fnum = std::to_string(flippyNum);
+  std::string snum = std::to_string(sphereNum);
+  if (flippyNum < 10){
+    return "F00" + fnum + "_S" + snum;
+  } else if (flippyNum < 100){
+    return "F0" + fnum + "_S" + snum;
+  } else {
+    return "F" + fnum + "_S" + snum;
+  }
+}
 
 // Removes all user-created joints from a specified body DEF
-void remove_joints(const char* body_def) {
-  dBodyID body = dWebotsGetBodyFromDEF(body_def);
-  int num_joints = dBodyGetNumJoints(body);
-  for (int i = 0; i < num_joints; i++) {
+void removeJoints(const char* bodyDef) {
+  dBodyID body = dWebotsGetBodyFromDEF(bodyDef);
+  int numJoints = dBodyGetNumJoints(body);
+  for (int i = 0; i < numJoints; i++) {
     dJointID joint = dBodyGetJoint(body, i);
     // Only user-created joints will be in the joints set
     if (joints.find(joint) != joints.end()) {
@@ -50,7 +58,7 @@ void remove_joints(const char* body_def) {
 }
 
 // Creates a fixed joints between two specified bodies
-void add_fixed_joint(dBodyID b1, dBodyID b2) {
+void addFixedJoint(dBodyID b1, dBodyID b2) {
   dWorldID joint_world = dBodyGetWorld(b1);
   pthread_mutex_lock(&mutex);
   dJointID joint = dJointCreateFixed(joint_world, 0);
@@ -61,6 +69,9 @@ void add_fixed_joint(dBodyID b1, dBodyID b2) {
 }
 
 void webots_physics_init() {
+
+  // int numRobots = 4;
+
   pthread_mutex_init(&mutex, NULL);
 
   dWebotsConsolePrintf("INITIALIZING PHYSICS...");
@@ -68,34 +79,29 @@ void webots_physics_init() {
   // Initialize Simulation Bodies
   // TODO: Need to initialize bodies in a for loop when it comes to multi-agents
   
-  floor_body = dWebotsGetBodyFromDEF("FLOOR");
-  sphere1_body = dWebotsGetBodyFromDEF("F000_S1");
-  sphere2_body = dWebotsGetBodyFromDEF("F000_S2");
+  floorBody = dWebotsGetBodyFromDEF("FLOOR");
   
-  dBodyID sphere1_body1 = dWebotsGetBodyFromDEF("F001_S1");
-  dBodyID sphere2_body1 = dWebotsGetBodyFromDEF("F001_S2");
-
-
-  dWorldID world = dBodyGetWorld(sphere1_body1);
+  // dBodyID flippy_bodies[numRobots][2];
+  // for (int i = 0; i < numRobots; i++) {
+  //   flippy_bodies[i][0] = dWebotsGetBodyFromDEF(flippyBodyName(i,1).c_str());
+  //   flippy_bodies[i][1] = dWebotsGetBodyFromDEF(flippyBodyName(i,2).c_str());
+  // }
+  
+  // dWorldID world = dBodyGetWorld(flippy_bodies[0][0]);
 
   // Create initial joint
   // TODO: create joint according to robot state only.
   dWebotsConsolePrintf("creating joints....");
 
-
   pthread_mutex_lock(&mutex);
-  // Creates a fixed joint belonging to the world ID, with the default joint group ID (0)
-  dJointID joint = dJointCreateFixed(world, 0);
-  dJointID joint1 = dJointCreateFixed(world, 0);
-  dJointAttach(joint, sphere2_body, floor_body);
-  dJointAttach(joint1, sphere2_body1, floor_body);
-  // Fixes the bodies while maintaining their current relative orientations and displacements
-  dJointSetFixed(joint);
-  dJointSetFixed(joint1);
-  // Add the user-created joint to the set of joints
-  // Required because otherwise we'd delete joints between the solid bodies of a single flippy
-  joints.insert(joint);
-  joints.insert(joint1);
+  
+  // for(int i = 0; i < numRobots; i++) {
+    // dJointID joint = dJointCreateFixed(world, 0);
+    // dJointAttach(joint, flippy_bodies[i][1], floorBody);
+    // dJointSetFixed(joint);
+    // joints.insert(joint);
+  // }
+
   pthread_mutex_unlock(&mutex);
 
 }
@@ -123,7 +129,7 @@ void webots_physics_step() {
           // Specifies the body (by DEF) to unfix
           dWebotsConsolePrintf("REMOVING JOINTS FROM: ");
           dWebotsConsolePrintf(msg);
-          remove_joints(msg);
+          removeJoints(msg);
         } else {
           // This is the second message in the package.
           // Specifies the body (by DEF) to fix
@@ -131,7 +137,7 @@ void webots_physics_step() {
           dWebotsConsolePrintf(msg);
           dBodyID body1 = dWebotsGetBodyFromDEF(msg);
           dBodyID body2 = dWebotsGetBodyFromDEF("FLOOR");
-          add_fixed_joint(body1, body2);
+          addFixedJoint(body1, body2);
         }
         ++count;
         j = 0;
@@ -150,25 +156,26 @@ int webots_physics_collide(dGeomID g1, dGeomID g2) {
   /*
    * This function needs to be implemented if you want to overide Webots collision detection.
    * It must return 1 if the collision was handled and 0 otherwise.
-   * Note that contact joints should be added to the contact_joint_group which can change over the time, e.g.
+   * Note that contact joints should be added to the contactJoint_group which can change over the time, e.g.
    *   n = dCollide(g1, g2, MAX_CONTACTS, &contact[0].geom, sizeof(dContact));
-   *   dJointGroupID contact_joint_group = dWebotsGetContactJointGroup();
+   *   dJointGroupID contactJoint_group = dWebotsGetContactJointGroup();
    *   dWorldID world = dBodyGetWorld(body1);
    *   ...
    *   pthread_mutex_lock(&mutex);
-   *   dJointCreateContact(world, contact_joint_group, &contact[i])
-   *   dJointAttach(contact_joint, body1, body2);
+   *   dJointCreateContact(world, contactJoint_group, &contact[i])
+   *   dJointAttach(contactJoint, body1, body2);
    *   pthread_mutex_unlock(&mutex);
    *   ...
    */
-   // dBodyID b1 = dGeomGetBody(g1);
-   // dBodyID b2 = dGeomGetBody(g2);
+  //  dBodyID b1 = dGeomGetBody(g1);
+  //  dBodyID b2 = dGeomGetBody(g2);
 
   // if ((!dAreGeomsSame(g1, floor_geom) && dBodyGetNumJoints(b1) == 0) ||
        // (!dAreGeomsSame(g2, floor_geom) && dBodyGetNumJoints(b2) == 0)) {
-    // add_fixed_joint(g1, g2);
+    // addFixedJoint(g1, g2);
     // return 1;
   // }
+  
   return 0;
 }
 

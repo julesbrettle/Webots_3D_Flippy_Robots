@@ -1,10 +1,11 @@
 Robot {
-  translation -0.14839071 0.3074893 -0.00202926
-  rotation 0.9990191636211107 -0.0401312301454623 0.018713500067830187 0.8734166
+  translation 
+  rotation 
   children [
     DEF FlippyParts Group {
       children [
         DEF FLIPPY_BODY Solid {
+          rotation 0 0 1 -1.5708003061004252
           children [
             DEF BODY Shape {
               appearance DEF RED PBRAppearance {
@@ -23,9 +24,13 @@ Robot {
           physics Physics {
           }
         }
-        DEF H1 HingeJoint {
+        DEF H1 Hinge2Joint {
           jointParameters HingeJointParameters {
-            anchor 0 0.025 0
+            axis 0 0 1
+            anchor 0.025 0 0
+          }
+          jointParameters2 JointParameters {
+            axis 0 -1 0
           }
           device [
             PositionSensor {
@@ -33,41 +38,35 @@ Robot {
             }
             RotationalMotor {
               name "M1"
+              maxVelocity 100
+            }
+          ]
+          device2 [
+            PositionSensor {
+              name "RP1"
+            }
+            RotationalMotor {
+              name "RM1"
             }
           ]
           endPoint DEF F###_S1 Solid {
-            translation 0 0.025 0
+            translation 0.025 0 0
             rotation -1 0 0 0
             children [
               DEF S1 Group {
                 children [
                   DEF HS11 Transform {
-                    translation 0 0 0.004
                     children [
-                      Shape {
-                        appearance PBRAppearance {
-                          baseColor 0.4 1 0.4
-                          roughness 1
-                        }
-                        geometry Sphere {
-                          radius 0.03
-                          subdivision 2
-                        }
+                      hemisphere {
+                        color 0.4 0.9 0.4
                       }
                     ]
                   }
                   DEF HS12 Transform {
-                    translation 0 0 -0.004
+                    rotation 1 0 0 3.1415
                     children [
-                      Shape {
-                        appearance PBRAppearance {
-                          baseColor 0.1 0.7 0.1
-                          roughness 1
-                        }
-                        geometry Sphere {
-                          radius 0.03
-                          subdivision 2
-                        }
+                      hemisphere {
+                        color 0.1 0.7 0.1
                       }
                     ]
                   }
@@ -92,9 +91,13 @@ Robot {
             }
           }
         }
-        DEF H2 HingeJoint {
+        DEF H2 Hinge2Joint {
           jointParameters HingeJointParameters {
-            anchor 0 -0.025 0
+            axis 0 0 1
+            anchor -0.025 0 0
+          }
+          jointParameters2 JointParameters {
+            axis 0 1 0
           }
           device [
             PositionSensor {
@@ -102,41 +105,35 @@ Robot {
             }
             RotationalMotor {
               name "M2"
+              maxVelocity 100
+            }
+          ]
+          device2 [
+            PositionSensor {
+              name "RP2"
+            }
+            RotationalMotor {
+              name "RM2"
             }
           ]
           endPoint DEF F###_S2 Solid {
-            translation 0 -0.025 0
+            translation -0.025 0 0
             rotation -1 0 0 0
             children [
               DEF S2 Group {
                 children [
                   DEF HS21 Transform {
-                    translation 0 0 0.004
                     children [
-                      Shape {
-                        appearance PBRAppearance {
-                          baseColor 0.4 0.4 1
-                          roughness 1
-                        }
-                        geometry Sphere {
-                          radius 0.03
-                          subdivision 2
-                        }
+                      hemisphere {
+                        color 0.4 0.4 1
                       }
                     ]
                   }
                   DEF HS22 Transform {
-                    translation 0 0 -0.004
+                    rotation 1 0 0 3.1415
                     children [
-                      Shape {
-                        appearance PBRAppearance {
-                          baseColor 0.1 0.1 0.7
-                          roughness 1
-                        }
-                        geometry Sphere {
-                          radius 0.03
-                          subdivision 2
-                        }
+                      hemisphere {
+                        color 0.1 0.1 0.7
                       }
                     ]
                   }
@@ -169,6 +166,9 @@ Robot {
         InertialUnit {
           name "IU"
         }
+        GPS {
+          name "GPS"
+        }
       ]
     }
   ]
@@ -180,4 +180,3 @@ Robot {
     "0"
   ]
 }
-

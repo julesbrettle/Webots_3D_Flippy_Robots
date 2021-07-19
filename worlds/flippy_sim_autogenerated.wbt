@@ -6,12 +6,18 @@ WorldInfo {
   ]
   title "FLIPPY SIM AUTO"
   physics "flippy_physics"
-  basicTimeStep 16
+  basicTimeStep 4
+  FPS 30
   coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+      bounce 0.4
+    }
+  ]
 }
 Viewpoint {
-  orientation -0.09038572960142734 -0.9648540423900209 -0.2467531089329039 1.983834912716192
-  position -0.9712672294084008 0.48633972408115617 -0.3456696747452824
+  orientation 0.07917411436880131 0.993820171801328 0.07780055099223139 4.723690630713181
+  position -2.596089307444719 0.01183690580460807 -0.9553424410999073
 }
 Background {
   skyColor [
@@ -22,11 +28,12 @@ Background {
     0 0 0
   ]
 }
-DEF FLOOR RectangleArena {
-}
-DEF real_floor Solid {
+DEF floor1 Solid {
   children [
     DEF floor_shape Shape {
+      appearance PBRAppearance {
+        roughness 1
+      }
       geometry Box {
         size 1 0.01 1
       }
@@ -48,94 +55,205 @@ DEF real_floor Solid {
   ]
   boundingObject USE floor_shape
 }
-Robot {
-  translation -0.15068842 0.03000609 -0.00663518
-  rotation 0.8709509182164061 -0.3462389674876431 0.34865896726040146 1.69012
+DEF floor2 Solid {
+  translation 0 -0.4305 -0.7457
+  rotation 1 0 0 -1.047195307179586
   children [
-    Solid {
+    USE floor_shape
+  ]
+  name "solid(1)"
+  boundingObject USE floor_shape
+}
+DEF floor3 Solid {
+  translation 0 -0.4305 -1.253
+  rotation 1 0 0 1.0472
+  children [
+    USE floor_shape
+  ]
+  name "solid(2)"
+  boundingObject USE floor_shape
+}
+DEF floor4 Solid {
+  translation 0 0 -1.9988
+  rotation 1 0 0 0
+  children [
+    USE floor_shape
+  ]
+  name "solid(3)"
+  boundingObject USE floor_shape
+}
+Robot {
+  translation -0.15492101  0.06625961 -0.38857961 
+  rotation  0.0660379  -0.2464568  -0.96690126  0.54067509 
+  children [
+    DEF FlippyParts Group {
       children [
-        DEF BODY Shape {
-          appearance DEF RED PBRAppearance {
-            baseColor 1 0.2 0.2
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            height 0.1
-            radius 0.01
+        DEF FLIPPY_BODY Solid {
+          rotation 0 0 1 -1.5708003061004252
+          children [
+            DEF BODY Shape {
+              appearance DEF RED PBRAppearance {
+                baseColor 1 0.2 0.2
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.01
+              }
+            }
+          ]
+          name "solid(2)"
+          boundingObject USE BODY
+          physics Physics {
           }
         }
-      ]
-      name "solid(2)"
-      boundingObject USE BODY
-      physics Physics {
-      }
-    }
-    HingeJoint {
-      jointParameters DEF HINGE_PARAMS HingeJointParameters {
-        anchor 0 0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M1"
-        }
-      ]
-      endPoint DEF F000_S1 Solid {
-        translation 0 0.04991302955174124 3.701909857734677e-05
-        rotation -1 0 0 0.0005667977202639379
-        children [
-          DEF S1 Shape {
-            appearance DEF GREEN PBRAppearance {
-              baseColor 0.2 1 0.2
-              roughness 1
-              metalness 0
-            }
-            geometry Sphere {
-              radius 0.03
-            }
+        DEF H1 Hinge2Joint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+            anchor 0.025 0 0
           }
-          DEF BUMPER TouchSensor {
-            name "T1"
+          jointParameters2 JointParameters {
+            axis 0 -1 0
+          }
+          device [
+            PositionSensor {
+              name "P1"
+            }
+            RotationalMotor {
+              name "M1"
+              maxVelocity 100
+            }
+          ]
+          device2 [
+            PositionSensor {
+              name "RP1"
+            }
+            RotationalMotor {
+              name "RM1"
+            }
+          ]
+          endPoint DEF F000_S1 Solid {
+            translation 0.025 0 0
+            rotation -1 0 0 0
+            children [
+              DEF S1 Group {
+                children [
+                  DEF HS11 Transform {
+                    children [
+                      hemisphere {
+                        color 0.4 0.9 0.4
+                      }
+                    ]
+                  }
+                  DEF HS12 Transform {
+                    rotation 1 0 0 3.1415
+                    children [
+                      hemisphere {
+                        color 0.1 0.7 0.1
+                      }
+                    ]
+                  }
+                ]
+              }
+              DEF T11 TouchSensor {
+                name "T11"
+                boundingObject USE HS11
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+              DEF T12 TouchSensor {
+                name "T12"
+                boundingObject USE HS12
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+            ]
+            name "s1"
             boundingObject USE S1
-            physics DEF BUMP_PHYSICS Physics {
+            physics DEF S_PHYSICS Physics {
             }
           }
-        ]
-        boundingObject USE S1
-        physics DEF S_PHYSICS Physics {
         }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        anchor 0 -0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M2"
+        DEF H2 Hinge2Joint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+            anchor -0.025 0 0
+          }
+          jointParameters2 JointParameters {
+            axis 0 1 0
+          }
+          device [
+            PositionSensor {
+              name "P2"
+            }
+            RotationalMotor {
+              name "M2"
+              maxVelocity 100
+            }
+          ]
+          device2 [
+            PositionSensor {
+              name "RP2"
+            }
+            RotationalMotor {
+              name "RM2"
+            }
+          ]
+          endPoint DEF F000_S2 Solid {
+            translation -0.025 0 0
+            rotation -1 0 0 0
+            children [
+              DEF S2 Group {
+                children [
+                  DEF HS21 Transform {
+                    children [
+                      hemisphere {
+                        color 0.4 0.4 1
+                      }
+                    ]
+                  }
+                  DEF HS22 Transform {
+                    rotation 1 0 0 3.1415
+                    children [
+                      hemisphere {
+                        color 0.1 0.1 0.7
+                      }
+                    ]
+                  }
+                ]
+              }
+              DEF T21 TouchSensor {
+                name "T21"
+                boundingObject USE HS21
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+              DEF T22 TouchSensor {
+                name "T22"
+                boundingObject USE HS22
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+            ]
+            name "s2"
+            boundingObject USE S2
+            physics USE S_PHYSICS
+          }
+        }
+        Receiver {
+          name "R1"
+        }
+        Emitter {
+          name "E1"
+        }
+        InertialUnit {
+          name "IU"
+        }
+        GPS {
+          name "GPS"
         }
       ]
-      endPoint DEF F000_S2 Solid {
-        translation 0 -0.05034385278663667 -0.00015123474696968143
-        rotation -1 0 0 0.0005051759181945691
-        children [
-          USE S1
-          TouchSensor {
-            name "T2"
-            boundingObject USE S1
-            physics USE BUMP_PHYSICS
-          }
-        ]
-        name "solid(1)"
-        boundingObject USE S1
-        physics USE S_PHYSICS
-      }
-    }
-    Receiver {
-      name "R1"
-    }
-    Emitter {
-      name "E1"
     }
   ]
   name "F000"
@@ -145,294 +263,181 @@ Robot {
   controllerArgs [
     "0"
   ]
-}
-Robot {
-  translation -0.00828115 0.0299506 -0.00112324
-  rotation 0.9934318126621877 -0.08161416021870874 0.08020201021492447 1.55993221
+}Robot {
+  translation -0.15032982  0.07079038 -0.1050426  
+  rotation -0.01856796  0.06929656 -0.99742329  0.52489024 
   children [
-    Solid {
+    DEF FlippyParts Group {
       children [
-        DEF BODY Shape {
-          appearance DEF RED PBRAppearance {
-            baseColor 1 0.2 0.2
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            height 0.1
-            radius 0.01
+        DEF FLIPPY_BODY Solid {
+          rotation 0 0 1 -1.5708003061004252
+          children [
+            DEF BODY Shape {
+              appearance DEF RED PBRAppearance {
+                baseColor 1 0.2 0.2
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.01
+              }
+            }
+          ]
+          name "solid(2)"
+          boundingObject USE BODY
+          physics Physics {
           }
         }
-      ]
-      name "solid(2)"
-      boundingObject USE BODY
-      physics Physics {
-      }
-    }
-    HingeJoint {
-      jointParameters DEF HINGE_PARAMS HingeJointParameters {
-        anchor 0 0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M1"
-        }
-      ]
-      endPoint DEF F001_S1 Solid {
-        translation 0 0.04991302955174124 3.701909857734677e-05
-        rotation -1 0 0 0.0005667977202639379
-        children [
-          DEF S1 Shape {
-            appearance DEF GREEN PBRAppearance {
-              baseColor 0.2 1 0.2
-              roughness 1
-              metalness 0
-            }
-            geometry Sphere {
-              radius 0.03
-            }
+        DEF H1 Hinge2Joint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+            anchor 0.025 0 0
           }
-          DEF BUMPER TouchSensor {
-            name "T1"
+          jointParameters2 JointParameters {
+            axis 0 -1 0
+          }
+          device [
+            PositionSensor {
+              name "P1"
+            }
+            RotationalMotor {
+              name "M1"
+              maxVelocity 100
+            }
+          ]
+          device2 [
+            PositionSensor {
+              name "RP1"
+            }
+            RotationalMotor {
+              name "RM1"
+            }
+          ]
+          endPoint DEF F001_S1 Solid {
+            translation 0.025 0 0
+            rotation -1 0 0 0
+            children [
+              DEF S1 Group {
+                children [
+                  DEF HS11 Transform {
+                    children [
+                      hemisphere {
+                        color 0.4 0.9 0.4
+                      }
+                    ]
+                  }
+                  DEF HS12 Transform {
+                    rotation 1 0 0 3.1415
+                    children [
+                      hemisphere {
+                        color 0.1 0.7 0.1
+                      }
+                    ]
+                  }
+                ]
+              }
+              DEF T11 TouchSensor {
+                name "T11"
+                boundingObject USE HS11
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+              DEF T12 TouchSensor {
+                name "T12"
+                boundingObject USE HS12
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+            ]
+            name "s1"
             boundingObject USE S1
-            physics DEF BUMP_PHYSICS Physics {
+            physics DEF S_PHYSICS Physics {
             }
           }
-        ]
-        boundingObject USE S1
-        physics DEF S_PHYSICS Physics {
         }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        anchor 0 -0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M2"
+        DEF H2 Hinge2Joint {
+          jointParameters HingeJointParameters {
+            axis 0 0 1
+            anchor -0.025 0 0
+          }
+          jointParameters2 JointParameters {
+            axis 0 1 0
+          }
+          device [
+            PositionSensor {
+              name "P2"
+            }
+            RotationalMotor {
+              name "M2"
+              maxVelocity 100
+            }
+          ]
+          device2 [
+            PositionSensor {
+              name "RP2"
+            }
+            RotationalMotor {
+              name "RM2"
+            }
+          ]
+          endPoint DEF F001_S2 Solid {
+            translation -0.025 0 0
+            rotation -1 0 0 0
+            children [
+              DEF S2 Group {
+                children [
+                  DEF HS21 Transform {
+                    children [
+                      hemisphere {
+                        color 0.4 0.4 1
+                      }
+                    ]
+                  }
+                  DEF HS22 Transform {
+                    rotation 1 0 0 3.1415
+                    children [
+                      hemisphere {
+                        color 0.1 0.1 0.7
+                      }
+                    ]
+                  }
+                ]
+              }
+              DEF T21 TouchSensor {
+                name "T21"
+                boundingObject USE HS21
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+              DEF T22 TouchSensor {
+                name "T22"
+                boundingObject USE HS22
+                physics DEF BUMP_PHYSICS Physics {
+                }
+              }
+            ]
+            name "s2"
+            boundingObject USE S2
+            physics USE S_PHYSICS
+          }
+        }
+        Receiver {
+          name "R1"
+        }
+        Emitter {
+          name "E1"
+        }
+        InertialUnit {
+          name "IU"
+        }
+        GPS {
+          name "GPS"
         }
       ]
-      endPoint DEF F001_S2 Solid {
-        translation 0 -0.05034385278663667 -0.00015123474696968143
-        rotation -1 0 0 0.0005051759181945691
-        children [
-          USE S1
-          TouchSensor {
-            name "T2"
-            boundingObject USE S1
-            physics USE BUMP_PHYSICS
-          }
-        ]
-        name "solid(1)"
-        boundingObject USE S1
-        physics USE S_PHYSICS
-      }
-    }
-    Receiver {
-      name "R1"
-    }
-    Emitter {
-      name "E1"
     }
   ]
   name "F001"
-  boundingObject USE BODY
-  physics USE S_PHYSICS
-  controller "flippy_controller"
-  controllerArgs [
-    "0"
-  ]
-}
-Robot {
-  translation 0.14734011 0.0300669 -0.00674371
-  rotation 0.9962180381483735 -0.06197329988481296 0.06090098988680602 1.55713171
-  children [
-    Solid {
-      children [
-        DEF BODY Shape {
-          appearance DEF RED PBRAppearance {
-            baseColor 1 0.2 0.2
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            height 0.1
-            radius 0.01
-          }
-        }
-      ]
-      name "solid(2)"
-      boundingObject USE BODY
-      physics Physics {
-      }
-    }
-    HingeJoint {
-      jointParameters DEF HINGE_PARAMS HingeJointParameters {
-        anchor 0 0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M1"
-        }
-      ]
-      endPoint DEF F002_S1 Solid {
-        translation 0 0.04991302955174124 3.701909857734677e-05
-        rotation -1 0 0 0.0005667977202639379
-        children [
-          DEF S1 Shape {
-            appearance DEF GREEN PBRAppearance {
-              baseColor 0.2 1 0.2
-              roughness 1
-              metalness 0
-            }
-            geometry Sphere {
-              radius 0.03
-            }
-          }
-          DEF BUMPER TouchSensor {
-            name "T1"
-            boundingObject USE S1
-            physics DEF BUMP_PHYSICS Physics {
-            }
-          }
-        ]
-        boundingObject USE S1
-        physics DEF S_PHYSICS Physics {
-        }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        anchor 0 -0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M2"
-        }
-      ]
-      endPoint DEF F002_S2 Solid {
-        translation 0 -0.05034385278663667 -0.00015123474696968143
-        rotation -1 0 0 0.0005051759181945691
-        children [
-          USE S1
-          TouchSensor {
-            name "T2"
-            boundingObject USE S1
-            physics USE BUMP_PHYSICS
-          }
-        ]
-        name "solid(1)"
-        boundingObject USE S1
-        physics USE S_PHYSICS
-      }
-    }
-    Receiver {
-      name "R1"
-    }
-    Emitter {
-      name "E1"
-    }
-  ]
-  name "F002"
-  boundingObject USE BODY
-  physics USE S_PHYSICS
-  controller "flippy_controller"
-  controllerArgs [
-    "0"
-  ]
-}
-Robot {
-  translation 0.31170383 0.03007519 -0.00822538
-  rotation 0.999327412677382 0.026155220070074647 -0.025702660068862154 1.55401575
-  children [
-    Solid {
-      children [
-        DEF BODY Shape {
-          appearance DEF RED PBRAppearance {
-            baseColor 1 0.2 0.2
-            roughness 1
-            metalness 0
-          }
-          geometry Cylinder {
-            height 0.1
-            radius 0.01
-          }
-        }
-      ]
-      name "solid(2)"
-      boundingObject USE BODY
-      physics Physics {
-      }
-    }
-    HingeJoint {
-      jointParameters DEF HINGE_PARAMS HingeJointParameters {
-        anchor 0 0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M1"
-        }
-      ]
-      endPoint DEF F003_S1 Solid {
-        translation 0 0.04991302955174124 3.701909857734677e-05
-        rotation -1 0 0 0.0005667977202639379
-        children [
-          DEF S1 Shape {
-            appearance DEF GREEN PBRAppearance {
-              baseColor 0.2 1 0.2
-              roughness 1
-              metalness 0
-            }
-            geometry Sphere {
-              radius 0.03
-            }
-          }
-          DEF BUMPER TouchSensor {
-            name "T1"
-            boundingObject USE S1
-            physics DEF BUMP_PHYSICS Physics {
-            }
-          }
-        ]
-        boundingObject USE S1
-        physics DEF S_PHYSICS Physics {
-        }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        anchor 0 -0.05 0
-      }
-      device [
-        RotationalMotor {
-          name "M2"
-        }
-      ]
-      endPoint DEF F003_S2 Solid {
-        translation 0 -0.05034385278663667 -0.00015123474696968143
-        rotation -1 0 0 0.0005051759181945691
-        children [
-          USE S1
-          TouchSensor {
-            name "T2"
-            boundingObject USE S1
-            physics USE BUMP_PHYSICS
-          }
-        ]
-        name "solid(1)"
-        boundingObject USE S1
-        physics USE S_PHYSICS
-      }
-    }
-    Receiver {
-      name "R1"
-    }
-    Emitter {
-      name "E1"
-    }
-  ]
-  name "F003"
   boundingObject USE BODY
   physics USE S_PHYSICS
   controller "flippy_controller"

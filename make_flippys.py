@@ -15,7 +15,7 @@ from scipy.spatial.transform import Rotation as R
 def create_layout(dims, spacing,
                   offset=np.array([0,0,0]),
                   x_noise=(0, 0.005),
-                  y_noise=(0, 0.0001),
+                  y_noise=(0, 0.01),
                   z_noise=(0, 0.005),
                   rot_noise=(0, 10*np.pi/180)):
     """
@@ -91,7 +91,7 @@ def create_layout(dims, spacing,
         locs[i] = np.array([x,y,z]) + make_noise(x_noise, y_noise, z_noise)
 
         # Rotate the flippy so that its spheres are almost flat with the ground
-        r1 = R.from_euler('x', 89, degrees=True)
+        r1 = R.from_euler('z', -30, degrees=True)
         # Rotate the flippy some random amount to change its heading
         r2 = R.from_euler('y', np.random.normal(*rot_noise))
         # Combine the rotations and express them as a rotation vector
@@ -227,11 +227,13 @@ def make_noise(x_params, y_params, z_params):
 
 if __name__=="__main__":
     # Create a swarm of flippys 4 wide, 1 tall, and 2 long
-    dims = np.array([4, 1, 1])
+    dims = np.array([1, 1, 2])
     # The average spacing between the flippys will be 0.15m, 0.03m and 0.2m
-    spacing = np.array((0.15, 0.03, 0.2))
+    spacing = np.array((0.25, 0.1, 0.3))
     # The first flippy will be located at:
-    offset=np.array([-0.15, 0.03, 0])
+    # offset=np.array([-0.15, 0.3, -0.5])
+    offset=np.array([-0.15, 0.08, -0.4])
+
 
     locs, rots = create_layout(dims, spacing, offset=offset)
     make_flippys(locs, rots, write_to_wbt=True, start_index=0)
