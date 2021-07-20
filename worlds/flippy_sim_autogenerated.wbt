@@ -17,7 +17,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.07917411436880131 0.993820171801328 0.07780055099223139 4.723690630713181
-  position -2.596089307444719 0.01183690580460807 -0.9553424410999073
+  position -2.5753252012694983 0.1480919320339374 -0.9955666183497105
 }
 Background {
   skyColor [
@@ -56,22 +56,32 @@ DEF floor1 Solid {
   boundingObject USE floor_shape
 }
 DEF floor2 Solid {
-  translation 0 -0.4305 -0.7457
-  rotation 1 0 0 -1.047195307179586
+  translation 0 0 -0.5
+  rotation 1 0 0 -0.9162996938995747
   children [
-    USE floor_shape
+    DEF floor2_shape Transform {
+      translation 0 0 -0.5
+      children [
+        USE floor_shape
+      ]
+    }
   ]
   name "solid(1)"
-  boundingObject USE floor_shape
+  boundingObject USE floor2_shape
 }
 DEF floor3 Solid {
-  translation 0 -0.4305 -1.253
-  rotation 1 0 0 1.0472
+  translation 0 0 -1.5
+  rotation 1 0 0 0.9162996938995747
   children [
-    USE floor_shape
+    DEF floor3_shape Transform {
+      translation 0 0 0.5
+      children [
+        USE floor_shape
+      ]
+    }
   ]
   name "solid(2)"
-  boundingObject USE floor_shape
+  boundingObject USE floor3_shape
 }
 DEF floor4 Solid {
   translation 0 0 -1.9988
@@ -83,8 +93,8 @@ DEF floor4 Solid {
   boundingObject USE floor_shape
 }
 Robot {
-  translation -0.15492101  0.06625961 -0.38857961 
-  rotation  0.0660379  -0.2464568  -0.96690126  0.54067509 
+  translation -0.15449549  0.07939487 -0.39869101 
+  rotation -0.25056989  0.93513955 -0.25045709  1.63825487 
   children [
     DEF FlippyParts Group {
       children [
@@ -264,8 +274,8 @@ Robot {
     "0"
   ]
 }Robot {
-  translation -0.15032982  0.07079038 -0.1050426  
-  rotation -0.01856796  0.06929656 -0.99742329  0.52489024 
+  translation -0.15401196  0.09045286 -0.20127218 
+  rotation -0.25060277  0.93526228 -0.24996543  1.64021526 
   children [
     DEF FlippyParts Group {
       children [

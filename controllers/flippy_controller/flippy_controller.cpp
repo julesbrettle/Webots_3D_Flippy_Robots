@@ -26,11 +26,11 @@ using namespace webots;
 // Declare simulation parameters
 double goalCoords[1][4] = {0.0, 0.0, -2.0, 0.5}; // {x, y, z, tolerance} for each consecutive goal point flippies steer towards
   // TODO: use more than just the first goal point
-double slowCoords[1][4] = {0.0, -0.95, -1.0, 0.3}; // {x, y, z, range multiplier} for each point source of flip delay - see auto calcFlipDelay()
+double slowCoords[1][4] = {0.0, -0.8, -1.0, 0.1}; // {x, y, z, range multiplier} for each point source of flip delay - see auto calcFlipDelay()
   // TODO: use more than just the first slowdown point
 const int FLIP_DELAY_MIN = 10; // minimum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
-const int FLIP_DELAY_MAX = 700; // maximum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
-const int BRIDGE_DELAY = 800; // number of timesteps flippy will wait in bridge state after no longer being walked on
+const int FLIP_DELAY_MAX = 1000; // maximum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
+const int BRIDGE_DELAY = 1100; // number of timesteps flippy will wait in bridge state after no longer being walked on
 float velocity = 5.0; // flipping motor speed
 const float TURNING_VELOCITY = 3.0; // turning motor speed
 const float CORRECTION_VELOCITY = 90.0; // flipping and turning motor speeds when reset to position = 0
@@ -375,8 +375,6 @@ int main(int argc, const char *argv[]) {
           m2->setPosition(INFINITY);
           m2->setVelocity(0.0);
 
-          setFixedSphere(1);
-
           movingMode = 103;
           oldMovingMode = 103;
 
@@ -394,6 +392,8 @@ int main(int argc, const char *argv[]) {
 
         if (flipDelayCounter >= flipDelay){
           flipDelayCounter = 0;
+          
+          setFixedSphere(1);
 
           // start m1 (start flipping around other sphere)
           m1->setVelocity(velocity);
@@ -456,8 +456,6 @@ int main(int argc, const char *argv[]) {
           m1->setPosition(INFINITY);
           m1->setVelocity(0.0);
 
-          setFixedSphere(2);
-
           movingMode = 203;
           oldMovingMode = 203;
 
@@ -475,6 +473,8 @@ int main(int argc, const char *argv[]) {
         
         if (flipDelayCounter >= flipDelay){
           flipDelayCounter = 0;
+          
+          setFixedSphere(2);
 
           // start m1 (start flipping around other sphere)
           m2->setVelocity(velocity);

@@ -93,7 +93,7 @@ def create_layout(dims, spacing,
         # Rotate the flippy so that its spheres are almost flat with the ground
         r1 = R.from_euler('z', -30, degrees=True)
         # Rotate the flippy some random amount to change its heading
-        r2 = R.from_euler('y', np.random.normal(*rot_noise))
+        r2 = R.from_euler('y', 90+np.random.normal(*rot_noise), degrees=True)
         # Combine the rotations and express them as a rotation vector
         r = (r2 * r1).as_rotvec()
         # In scipy, the length of the rotation vector is the mangitude of the rotaiton
@@ -229,7 +229,7 @@ if __name__=="__main__":
     # Create a swarm of flippys 4 wide, 1 tall, and 2 long
     dims = np.array([1, 1, 2])
     # The average spacing between the flippys will be 0.15m, 0.03m and 0.2m
-    spacing = np.array((0.25, 0.1, 0.3))
+    spacing = np.array((0.25, 0.1, 0.2))
     # The first flippy will be located at:
     # offset=np.array([-0.15, 0.3, -0.5])
     offset=np.array([-0.15, 0.08, -0.4])
