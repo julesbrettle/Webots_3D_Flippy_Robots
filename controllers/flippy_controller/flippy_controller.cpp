@@ -24,9 +24,9 @@
 using namespace webots;
 
 // Declare simulation parameters
-double goalCoords[1][4] = {0.0, 0.0, -2.0, 0.5}; // {x, y, z, tolerance} for each consecutive goal point flippies steer towards
+double goalCoords[1][4] = {0.0, 0.0, 0.0, 0.5}; // {x, y, z, tolerance} for each consecutive goal point flippies steer towards
   // TODO: use more than just the first goal point
-double slowCoords[1][4] = {0.0, -0.8, -1.0, 0.1}; // {x, y, z, range multiplier} for each point source of flip delay - see auto calcFlipDelay()
+double slowCoords[1][4] = {0.0, 0, 0, 0.1}; // {x, y, z, range multiplier} for each point source of flip delay - see auto calcFlipDelay()
   // TODO: use more than just the first slowdown point
 const int FLIP_DELAY_MIN = 10; // minimum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
 const int FLIP_DELAY_MAX = 1000; // maximum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
@@ -117,12 +117,18 @@ int main(int argc, const char *argv[]) {
   t21->enable(timeStep);
   t22->enable(timeStep);
 
-  // Initialize and enable the reciever (pointer)
+  // Initialize and enable the recievers (pointer)
   Receiver* r1 = robot->getReceiver("R1");
   r1->enable(timeStep);
+  Receiver* rs1 = robot->getReceiver("RS1");
+  r1->enable(timeStep);
+  Receiver* rs2 = robot->getReceiver("RS2");
+  r1->enable(timeStep);
 
-  // Initialize the emitter (pointer). No need to enable.
+  // Initialize the emitters (pointer). No need to enable.
   Emitter* e1 = robot->getEmitter("E1");
+  Emitter* es1 = robot->getEmitter("ES1");
+  Emitter* es2 = robot->getEmitter("ES2");
 
   // Initialize and enable the inertial unit (pointer)
   InertialUnit* iu = robot->getInertialUnit("IU");
@@ -480,7 +486,7 @@ int main(int argc, const char *argv[]) {
           m2->setVelocity(velocity);
           m2->setPosition(PI/2);
 
-          steer(1,true);
+          steer(2,true);
 
          // rotate sphere 2 back to starting position (correction)
           m1->setVelocity(CORRECTION_VELOCITY);

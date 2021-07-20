@@ -227,9 +227,9 @@ def make_noise(x_params, y_params, z_params):
 
 if __name__=="__main__":
     # Create a swarm of flippys 4 wide, 1 tall, and 2 long
-    dims = np.array([1, 1, 2])
+    dims = np.array([2, 1, 2])
     # The average spacing between the flippys will be 0.15m, 0.03m and 0.2m
-    spacing = np.array((0.25, 0.1, 0.2))
+    spacing = np.array((0.25, 0.1, 0.3))
     # The first flippy will be located at:
     # offset=np.array([-0.15, 0.3, -0.5])
     offset=np.array([-0.15, 0.08, -0.4])
