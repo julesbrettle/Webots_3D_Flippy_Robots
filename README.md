@@ -1,19 +1,24 @@
-# Webots_Playground
-An introductory WeBots Project with the end goal of creating a 3D simulation of swarm robots called flippys. Controller code for this project was written in C++. As of 05/03/2021, flippys are only capable of walking forward over any surfaces and are not implemented with rulesets. As such, there are no emergent behaviors.
+# Webots_3D_Flippy_Robots (Formerly Webots_Playground)
+A continuing Webots project with the end goal of creating a 3D simulation of swarm robots called flippys. Controller code for this project was written in C++.
 
 #### Table of Contents
-1. [Environment Setup](#environment-setup)
-2. [How/What to Run](#howwhat-to-run)
-3. [File Structure](#file-structure)
+
+1. [Project Purpose, Goals, and Progress](#project-purpose-goals-and-progress)
+2. [Environment Setup](#environment-setup)
+4. [How/What to Run](#howwhat-to-run)
+5. [File Structure](#file-structure)
     1. [`./controllers` Directory](#controllers-directory)
     2. [`./plugins` Directory](#plugins-directory)
     3. [`./script_inputs` Directory](#script_inputs-directory)
     4. [`./script_outputs` Directory](#script_outputs-directory)
-4. [Useful Resources](#useful-resources)
+6. [Useful Resources](#useful-resources)
     1. [Creating a Physics Plug-in with ODE](#creating-a-physics-plug-in-with-ode)
     2. [Webots General Documentation](#webots-general-documentation)
-5. [Recommendations and Next Steps](#recommendations-and-next-steps)
-6. [References](#references)
+7. [Recommendations and Next Steps](#recommendations-and-next-steps)
+8. [References](#references)
+
+## Project Purpose, Goals, and Progress
+
 
 ## Environment Setup
 **TL;DR: Download [Webots](https://cyberbotics.com/), Install a [C/C++ Compiler for Webots](https://cyberbotics.com/doc/guide/using-cpp) and make sure you have Python v3+**
