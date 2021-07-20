@@ -1,5 +1,5 @@
-# Webots_Playground
-An introductory WeBots Project with the end goal of creating a 3D simulation of swarm robots called flippys. Controller code for this project was written in C++. As of 05/03/2021, flippys are only capable of walking forward over any surfaces and are not implemented with rulesets. As such, there are no emergent behaviors.
+# Webots_3D_Flippy_Robots (Formerly Webots_Playground)
+A continuing Webots project with the end goal of creating a 3D simulation of swarm robots called flippys. Controller code for this project was written in C++.
 
 #### Table of Contents
 
