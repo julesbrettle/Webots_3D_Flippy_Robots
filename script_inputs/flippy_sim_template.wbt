@@ -16,8 +16,10 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.37176753695188813 0.8502264464156402 0.372698119507141 4.548376726501557
-  position -1.4218713204947497 1.4687514706327651 -0.013961688102223813
+  fieldOfView 1.2
+  orientation 0 1 0 -1.5707996938995747
+  position -1.040670688748449 0.025720137886175783 -0.5131739804829633
+  follow "F000"
 }
 Background {
   skyColor [
@@ -27,12 +29,41 @@ Background {
     0 0 0
     0 0 0
   ]
+  backUrl [
+    "textures/cubic/dusk_back.png"
+  ]
+  bottomUrl [
+    "textures/cubic/dusk_bottom.png"
+  ]
+  frontUrl [
+    "textures/cubic/dusk_front.png"
+  ]
+  leftUrl [
+    "textures/cubic/dusk_left.png"
+  ]
+  rightUrl [
+    "textures/cubic/dusk_right.png"
+  ]
+  topUrl [
+    "textures/cubic/dusk_top.png"
+  ]
+}
+DirectionalLight {
+  ambientIntensity 1
+  direction -1 -0.5 -1
+  intensity 1.5
 }
 DEF floor1 Solid {
   children [
     DEF floor_shape Shape {
       appearance PBRAppearance {
-        roughness 1
+        baseColorMap ImageTexture {
+          url [
+            "textures/tiles.jpg"
+          ]
+        }
+        roughness 0.5
+        metalness 0.5
       }
       geometry Box {
         size 1 0.01 1
@@ -57,7 +88,7 @@ DEF floor1 Solid {
 }
 DEF floor2 Solid {
   translation 0 0 -0.5
-  rotation 1 0 0 -0.9162996938995747
+  rotation 1 0 0 -1.0471996938995747
   children [
     DEF floor2_shape Transform {
       translation 0 0 -0.5
@@ -71,7 +102,7 @@ DEF floor2 Solid {
 }
 DEF floor3 Solid {
   translation 0 0 -1.5
-  rotation 1 0 0 0.9162996938995747
+  rotation 1 0 0 1.0471996938995747
   children [
     DEF floor3_shape Transform {
       translation 0 0 0.5
@@ -92,3 +123,4 @@ DEF floor4 Solid {
   name "solid(3)"
   boundingObject USE floor_shape
 }
+

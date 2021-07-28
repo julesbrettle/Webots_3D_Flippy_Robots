@@ -24,16 +24,17 @@
 using namespace webots;
 
 // Declare simulation parameters
-double goalCoords[1][4] = {0.0, 0.0, 0.0, 0.5}; // {x, y, z, tolerance} for each consecutive goal point flippies steer towards
+double goalCoords[1][4] = {0.0, 0.0, -2.0, 0.5}; // {x, y, z, tolerance} for each consecutive goal point flippies steer towards
   // TODO: use more than just the first goal point
-double slowCoords[1][4] = {0.0, 0, 0, 0.1}; // {x, y, z, range multiplier} for each point source of flip delay - see auto calcFlipDelay()
+double slowCoords[1][4] = {0.0, -0.763, -1.0, 0.01}; // {x, y, z, range multiplier} for each point source of flip delay - see auto calcFlipDelay()
   // TODO: use more than just the first slowdown point
 const int FLIP_DELAY_MIN = 10; // minimum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
 const int FLIP_DELAY_MAX = 1000; // maximum number of timesteps flippy will wait between flips - see auto calcFlipDelay()
-const int BRIDGE_DELAY = 1100; // number of timesteps flippy will wait in bridge state after no longer being walked on
+const int BRIDGE_DELAY = 1000; // number of timesteps flippy will wait in bridge state after no longer being walked on
 float velocity = 5.0; // flipping motor speed
 const float TURNING_VELOCITY = 3.0; // turning motor speed
 const float CORRECTION_VELOCITY = 90.0; // flipping and turning motor speeds when reset to position = 0
+bool waitUntilStableToBridge = true;
 
 
 // Declare intermediate variables used for calculations
@@ -201,6 +202,12 @@ int main(int argc, const char *argv[]) {
       return true;
     } else if (moveMode == 201 && t21->getValue() == 1) {
       return true;
+    // } else if (moveMode == 4) {
+    //   if (oldMovingMode == 100 && t12->getValue() == 1) {
+    //     return true;
+    //   } else if (oldMovingMode == 200 && t21->getValue() == 1) {
+    //     return true;
+    //   }
     } else if (t11->getValue() == 1 || t22->getValue() == 1) {
       return true;
     } else { 
@@ -266,6 +273,7 @@ int main(int argc, const char *argv[]) {
    // Send start-of-step robot information to console. Comment out data not being currently used for speed.
     std::cout << robotName << " start step" << std::endl;
     std::cout << movingMode << "  " << t11->getValue() << t12->getValue() << t21->getValue() << t22->getValue() << "  " << wasWalkedOn << std::endl;
+    // std::cout << oldMovingMode << std::endl;
     // std::cout << "flipping motor positions: " << p1->getValue() << "  " << p2->getValue() << std::endl;
     // std::cout << "turning motor positions:  " << rp1->getValue() << "  " << rp2->getValue() << std::endl;
     // const double *rpy = iu->getRollPitchYaw();
@@ -278,7 +286,7 @@ int main(int argc, const char *argv[]) {
     if (isWalkedOn(movingMode) == 1) {  // check the touch sensors that corespond to being walked on for the current moving mode
       wasWalkedOn = 1;
     }
-    if ( isBetweenFlips() && wasWalkedOn == 1) { // if recorded being walked on and is at a sphere movement switch, go to case 4
+    if (!waitUntilStableToBridge || isBetweenFlips() && wasWalkedOn == 1) { // if recorded being walked on and is at a sphere movement switch, go to case 4
      // make sure motors are stopped
       m1->setPosition(INFINITY);
       m1->setVelocity(0.0);
@@ -309,8 +317,8 @@ int main(int argc, const char *argv[]) {
           rm2->setPosition(0.0);
 
          // when next robot step starts, watch for touch on t21 (in case 2)
-          movingMode = 201;
-          oldMovingMode = 201;
+          movingMode = 200;
+          oldMovingMode = 200;
         } else if (t21->getValue() == 1 || t22->getValue() == 1) { // if touch is sensed on sphere 2 then start moving sphere 1 about sphere 2 (like case 1)
          // stop m1 (stop flipping)
           m1->setPosition(INFINITY);
@@ -328,16 +336,18 @@ int main(int argc, const char *argv[]) {
           rm1->setPosition(0.0);
           
          // when next robot step starts, watch for touch on t12 (in case 1)
-          movingMode = 101;
-          oldMovingMode = 101;
+          movingMode = 100;
+          oldMovingMode = 100;
         }
         break;
       case 4:
         // in bridge state
         bridgeSteps = bridgeSteps + 1;
-        // std::cout << "loop case 4. bridgeSteps = " << bridgeSteps << std::endl;
+        std::cout << "loop case 4. bridgeSteps = " << bridgeSteps << std::endl;
         if (bridgeSteps >= BRIDGE_DELAY){
           movingMode = oldMovingMode;
+          // std::cout << "flipping motor positions: " << p1->getValue() << "  " << p2->getValue() << std::endl;
+          flipDelayCounter = 0;
         }
         break;
 
@@ -345,10 +355,13 @@ int main(int argc, const char *argv[]) {
         // Sphere1 is moving about sphere2
         // This is for the very short period right before Sphere1 lifts off the ground so that 
         // the touch sensor doesn't trigger anything
+        
+        m2->setPosition(INFINITY);
+        m2->setVelocity(velocity);
 
         if (p2->getValue() >= 0.1) { // when sphere 1 lifts a tiny bit off the ground, switch to movingMode 101
           movingMode = 101;
-          oldMovingMode = 101;
+          // oldMovingMode = 101;
         }
         break;
       case 101:
@@ -368,7 +381,7 @@ int main(int argc, const char *argv[]) {
           m2->setVelocity(velocity);
 
           movingMode = 102;
-          oldMovingMode = 102;
+          oldMovingMode = 103;
         }
 
         break;
@@ -382,7 +395,7 @@ int main(int argc, const char *argv[]) {
           m2->setVelocity(0.0);
 
           movingMode = 103;
-          oldMovingMode = 103;
+          // oldMovingMode = 103;
 
           flipDelayCounter = 1;
           flipDelay = calcFlipDelay();
@@ -402,8 +415,8 @@ int main(int argc, const char *argv[]) {
           setFixedSphere(1);
 
           // start m1 (start flipping around other sphere)
+          m1->setPosition(INFINITY);
           m1->setVelocity(velocity);
-          m1->setPosition(PI/2);
 
           steer(1,true);
 
@@ -413,7 +426,7 @@ int main(int argc, const char *argv[]) {
           rm2->setPosition(0.0);
 
           movingMode = 200;
-          oldMovingMode = 200;
+          oldMovingMode = 103;
         }
         
         break;
@@ -433,9 +446,13 @@ int main(int argc, const char *argv[]) {
         // Sphere2 is moving about sphere1
         // This is for the very short period right before Sphere2 lifts off the ground so that 
         // the touch sensor doesn't trigger anything
+        
+        m1->setPosition(INFINITY);
+        m1->setVelocity(velocity);
+        
         if (p1->getValue() >= 0.1) {
           movingMode = 201;
-          oldMovingMode = 201;
+          // oldMovingMode = 201;
         }
         break;
       case 201:
@@ -449,7 +466,7 @@ int main(int argc, const char *argv[]) {
           m1->setVelocity(velocity);
 
           movingMode = 202;
-          oldMovingMode = 202;
+          oldMovingMode = 203;
         }
 
         break;
@@ -463,7 +480,7 @@ int main(int argc, const char *argv[]) {
           m1->setVelocity(0.0);
 
           movingMode = 203;
-          oldMovingMode = 203;
+          // oldMovingMode = 203;
 
           flipDelayCounter = 1;
           flipDelay = calcFlipDelay();
@@ -483,8 +500,8 @@ int main(int argc, const char *argv[]) {
           setFixedSphere(2);
 
           // start m1 (start flipping around other sphere)
+          m2->setPosition(INFINITY);
           m2->setVelocity(velocity);
-          m2->setPosition(PI/2);
 
           steer(2,true);
 
@@ -494,7 +511,7 @@ int main(int argc, const char *argv[]) {
           rm1->setPosition(0.0);
 
           movingMode = 100;
-          oldMovingMode = 100;
+          // oldMovingMode = 203;
         }
         
         break;
@@ -521,7 +538,7 @@ int main(int argc, const char *argv[]) {
     }
 
    // send end-of-step robot information to console. Comment out data not being currently used for speed.
-    std::cout << movingMode << "  " << t11->getValue() << t12->getValue() << t21->getValue() << t22->getValue() << "  " << wasWalkedOn << std::endl;
+    // std::cout << movingMode << "  " << t11->getValue() << t12->getValue() << t21->getValue() << t22->getValue() << "  " << wasWalkedOn << std::endl;
   
   }; // end of robot control loop
 

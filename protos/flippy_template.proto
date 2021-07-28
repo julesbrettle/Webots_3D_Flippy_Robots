@@ -84,6 +84,13 @@ Robot {
                 physics DEF BUMP_PHYSICS Physics {
                 }
               }
+              Receiver {
+                name "RS1"
+              }
+              Emitter {
+                name "ES1"
+                range 0.061
+              }
             ]
             name "s1"
             boundingObject USE S1
@@ -150,6 +157,13 @@ Robot {
                 boundingObject USE HS22
                 physics DEF BUMP_PHYSICS Physics {
                 }
+              }
+              Receiver {
+                name "RS2"
+              }
+              Emitter {
+                name "ES2"
+                range 0.061
               }
             ]
             name "s2"

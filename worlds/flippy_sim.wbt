@@ -4,7 +4,7 @@ WorldInfo {
     ""
     ""
   ]
-  title "FLIPPY SIM AUTO"
+  title "FLIPPY SIM"
   physics "flippy_physics"
   basicTimeStep 4
   FPS 30
@@ -83,8 +83,8 @@ DEF floor4 Solid {
   boundingObject USE floor_shape
 }
 Robot {
-  translation -0.14157339 0.08024293 -0.3981806
-  rotation 0.1258030505793543 -0.46950337216217963 -0.8739222940246292 0.59501123
+  translation -0.14614689  0.06988689 -0.39705483 
+  rotation -0.25059165  0.93522077 -0.25013185  1.6395513  
   children [
     DEF FlippyParts Group {
       children [
@@ -259,14 +259,13 @@ Robot {
   name "F000"
   boundingObject USE BODY
   physics USE S_PHYSICS
-  controller "4t_flippy_controller"
+  controller "flippy_controller"
   controllerArgs [
     "0"
   ]
-}
-Robot {
-  translation -0.1479825 0.07509655 -0.09712904
-  rotation 0.037989970081551014 -0.14178048030435247 -0.9891688721233953 0.52906961
+}Robot {
+  translation -0.13923891  0.07403589 -0.21240086 
+  rotation -0.25057858  0.93517201 -0.25032716  1.6387726  
   children [
     DEF FlippyParts Group {
       children [
@@ -441,7 +440,7 @@ Robot {
   name "F001"
   boundingObject USE BODY
   physics USE S_PHYSICS
-  controller "4t_flippy_controller"
+  controller "flippy_controller"
   controllerArgs [
     "0"
   ]
