@@ -232,7 +232,7 @@ if __name__=="__main__":
     spacing = np.array((0.25, 0.1, 0.2))
     # The first flippy will be located at:
     # offset=np.array([-0.15, 0.3, -0.5])
-    offset=np.array([0, 0.08, -0.5])
+    offset=np.array([0, 0.08, -0.45])
 
 
     locs, rots = create_layout(dims, spacing, offset=offset)

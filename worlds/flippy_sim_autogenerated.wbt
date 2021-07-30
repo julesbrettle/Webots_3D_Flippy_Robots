@@ -62,11 +62,12 @@ DEF floor1 Solid {
             "textures/tiles.jpg"
           ]
         }
+        transparency 0.01
         roughness 0.5
         metalness 0.5
       }
       geometry Box {
-        size 1 0.01 1
+        size 1 0.01 1.00578
       }
     }
     DEF floor_connector Connector {
@@ -123,10 +124,9 @@ DEF floor4 Solid {
   name "solid(3)"
   boundingObject USE floor_shape
 }
-
 Robot {
-  translation -0.00555316  0.06823619 -0.50232722 
-  rotation -0.25053665  0.93501551 -0.25095295  1.6362814  
+  translation -0.00572612 0.07973568 -0.45697551
+  rotation -0.2504856796959769 0.9348252888653704 -0.2517113496944893 1.63327005
   children [
     DEF FlippyParts Group {
       children [
@@ -321,8 +321,8 @@ Robot {
   ]
 }
 Robot {
-  translation -0.01045172  0.06262338 -0.2986844  
-  rotation -0.2505591   0.9350993  -0.25061809  1.6376137  
+  translation -0.00953201 0.08552337 -0.25301363
+  rotation -0.2506440310336779 0.9354162538577382 -0.2493471510283294 1.64268559
   children [
     DEF FlippyParts Group {
       children [

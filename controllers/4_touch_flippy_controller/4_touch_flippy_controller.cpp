@@ -1,4 +1,4 @@
-// File:            flippy_controller.cpp
+// File:            4_touch_flippy_controller.cpp
 // Description:     Standard controller code for each "flippy" robot
 // Authors:         J. Zerez (Spring 2021), J. Brettle (Summer 2021)
 
@@ -45,11 +45,8 @@ double deltaZ; // flippy's z distance from point
 double theta;  // angle flippy should be headed to point at goal (radians)
 double adjustedYaw; // adjusted angle if flippy is upside down (radians)
 double turnAngle; // angle flippy should turn now to point at goal (radians)
-double slowDist; // radial distance from flippy to slowCoords point
-double goalDist; // radial distance from flippy to goalCoords point
-// double newDist;
-double largestNeighborDist = 0; 
-int flipDelay; // calculated delay between flips based on slowDist from slowCoords point
+double dist; // radial distance from flippy to slowCoords point
+int flipDelay; // calculated delay between flips based on dist from slowCoords point
 int flipDelayCounter = 0; // counts up to flipDelay
 int bridgeSteps = 0; // counts up to BRIDGE_DELAY
 
@@ -125,9 +122,9 @@ int main(int argc, const char *argv[]) {
   Receiver* r1 = robot->getReceiver("R1");
   r1->enable(timeStep);
   // Receiver* rs1 = robot->getReceiver("RS1");
-  // rs1->enable(timeStep);
+  // r1->enable(timeStep);
   // Receiver* rs2 = robot->getReceiver("RS2");
-  // rs2->enable(timeStep);
+  // r1->enable(timeStep);
 
   // Initialize the emitters (pointer). No need to enable.
   Emitter* e1 = robot->getEmitter("E1");
@@ -179,10 +176,10 @@ int main(int argc, const char *argv[]) {
     deltaX = slowCoords[0][0] - gpsCoords[0];
     deltaY = slowCoords[0][1] - gpsCoords[1];
     deltaZ = slowCoords[0][2] - gpsCoords[2];
-    slowDist = sqrt(pow(deltaX,2.0)+pow(deltaY,2.0)+pow(deltaZ,2.0));
+    dist = sqrt(pow(deltaX,2.0)+pow(deltaY,2.0)+pow(deltaZ,2.0));
    // This exp function keeps output between given MIN and MAX values
    // slowCoords[][3] defines the range of the effect (value < 1 for shorter range and > 1 for longer range)
-    return (FLIP_DELAY_MAX-FLIP_DELAY_MIN)*exp(-slowDist/slowCoords[0][3])+FLIP_DELAY_MIN;
+    return (FLIP_DELAY_MAX-FLIP_DELAY_MIN)*exp(-dist/slowCoords[0][3])+FLIP_DELAY_MIN;
 
   };
   auto setFixedSphere = [&](int movingSphere) { 
@@ -241,46 +238,6 @@ int main(int argc, const char *argv[]) {
       return false;
     }
   };
-  auto getGoalDist = [&]() {
-    const double *gpsCoords = gps->getValues();
-    deltaX = goalCoords[0][0] - gpsCoords[0];
-    deltaY = goalCoords[0][1] - gpsCoords[1];
-    deltaZ = goalCoords[0][2] - gpsCoords[2];
-    goalDist = sqrt(pow(deltaX,2.0)+pow(deltaY,2.0)+pow(deltaZ,2.0));
-    return goalDist;
-  };
-  // auto transmitDist = [&]() {
-  //   getGoalDist();
-  //   const double *data = &goalDist;
-  //   es1->send(data, sizeof(data));
-  //   es2->send(data, sizeof(data));
-  // };
-  // auto findLargestNeighborDist = [&](bool showOutput) {
-  //   largestNeighborDist = 0;
-  //   while (rs1->getQueueLength() > 0) {
-  //     const double *newDist = (double*)(rs1->getData());
-  //     if (*newDist > largestNeighborDist) {
-  //       largestNeighborDist = *newDist;
-  //     }
-  //     if (showOutput) {
-  //       std::cout << "rs1:  " << *newDist << std::endl;
-  //       std::cout << "lnd:  " << largestNeighborDist << std::endl;
-  //     }
-  //     rs1->nextPacket();
-  //   }
-  //   while (rs2->getQueueLength() > 0) {
-  //     const double *newDist = (double*)(rs2->getData());
-  //     if (*newDist > largestNeighborDist) {
-  //       largestNeighborDist = *newDist;
-  //     }
-  //     if (showOutput) {
-  //       std::cout << "rs2:  " << *newDist << std::endl;
-  //       std::cout << "lnd:  " << largestNeighborDist << std::endl;
-  //     }
-  //     rs2->nextPacket();
-  //   }
-  //   return largestNeighborDist;
-  // };
 
 
   // The first argument in controllerArgs specifies which sphere is moving
@@ -292,22 +249,19 @@ int main(int argc, const char *argv[]) {
     std::cout << "STATE IS: 0. NO MOVEMENT" << std::endl;
   } else if (strcmp(argv[1], "1") == 0) {
     // State 1: Sphere1 will move first. Robot will pivot around Sphere2
-    movingMode = 100;
-    setFixedSphere(2); 
+    movingMode = 1;
     m1->setVelocity(0.0);
     m2->setVelocity(velocity);
     std::cout << "STATE IS: 1. SPHERE 1 WILL MOVE FIRST" << std::endl;
   } else if (strcmp(argv[1], "2") == 0) {
     // State 2: Sphere2 will move first. Robot will pivot around Sphere1
-    movingMode = 200;
-    setFixedSphere(1); 
+    movingMode = 2;
     m1->setVelocity(velocity);
     m2->setVelocity(0.0);
     std::cout << "STATE IS: 2. SPHERE 2 WILL MOVE FIRST" << std::endl;
   } else {
     // Default state: Sphere1 will move first. Robot will pivot around Sphere2
-    movingMode = 100;
-    setFixedSphere(2); 
+    movingMode = 1;
     m1->setVelocity(0.0);
     m2->setVelocity(velocity);
     std::cout << "STATE IS: DEFAULT. SPHERE 1 WILL MOVE FIRST" << std::endl;
@@ -327,11 +281,6 @@ int main(int argc, const char *argv[]) {
     // const double *gpsCoords = gps->getValues();
     // std::cout << "gpsCoords:                " << gpsCoords[0] << "  " << gpsCoords[1] << "  " << gpsCoords[2] << std::endl;
     
-    // transmitDist();
-    // findLargestNeighborDist(true);
-    // if (largestNeighborDist > getGoalDist()) {
-      // wasWalkedOn = 1;
-    // }
 
    // flippy getting walked on protocols
     if (isWalkedOn(movingMode) == 1) {  // check the touch sensors that corespond to being walked on for the current moving mode

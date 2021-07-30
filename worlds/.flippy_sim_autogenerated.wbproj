@@ -5,6 +5,6 @@ sceneTreePerspectives: 000000ff0000000100000002000000c00000014d01000000020100000
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 0 "controllers/flippy_controller/flippy_controller.cpp"
+textFiles: 0 "controllers/flippy_controller/flippy_controller.cpp" "controllers/4_touch_flippy_controller/4_touch_flippy_controller.cpp"
 globalOptionalRendering: CoordinateSystem::AllBoundingObjects
 consoles: Console:All:All
