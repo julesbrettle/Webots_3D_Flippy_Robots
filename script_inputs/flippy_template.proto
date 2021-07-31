@@ -1,6 +1,6 @@
 Robot {
-  translation -0.15605608 0.07792765 -0.39797542
-  rotation -0.25057526952529546 0.9351596482283786 -0.25037664952567174 1.63857535
+  translation 
+  rotation 
   children [
     DEF FlippyParts Group {
       children [

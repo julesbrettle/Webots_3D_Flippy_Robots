@@ -123,10 +123,9 @@ DEF floor4 Solid {
   ]
   name "solid(3)"
   boundingObject USE floor_shape
-}
-Robot {
-  translation -0.00572612 0.07973568 -0.45697551
-  rotation -0.2504856796959769 0.9348252888653704 -0.2517113496944893 1.63327005
+}Robot {
+  translation  0.00099313  0.07445919 -0.45015884 
+  rotation -0.25055763  0.93509379 -0.25064013  1.63752596 
   children [
     DEF FlippyParts Group {
       children [
@@ -319,10 +318,9 @@ Robot {
   controllerArgs [
     "0"
   ]
-}
-Robot {
-  translation -0.00953201 0.08552337 -0.25301363
-  rotation -0.2506440310336779 0.9354162538577382 -0.2493471510283294 1.64268559
+}Robot {
+  translation -0.00203222  0.08243184 -0.23650143 
+  rotation -0.25063101  0.93536765 -0.24954248  1.64190454 
   children [
     DEF FlippyParts Group {
       children [

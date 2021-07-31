@@ -108,7 +108,7 @@ def create_layout(dims, spacing,
 def make_flippys(locs, rots,
                 default_state=0,
                 start_index=1,
-                base_proto_path='./protos/flippy_template.proto',
+                base_proto_path='./script_inputs/flippy_template.proto',
                 write_to_wbt=False
                 ):
     """
