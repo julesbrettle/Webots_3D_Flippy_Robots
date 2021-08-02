@@ -20,7 +20,9 @@
 ---
 
 ## 1 | Project Purpose and Progress
+
 *Section created by J. Brettle (Summer 2021)*
+
 *Section modified by __*
 
 This project builds upon the research done by [Lucie Houel](https://ssr.seas.harvard.edu/files/ssr/files/phdthesis2020malley.pdf), Melinda [Malley](https://ssr.seas.harvard.edu/files/ssr/files/phdthesis2020malley.pdf), and others in using "flippy" robots (modeled as two spheres that flip around each other to walk forwards and over each other) to mimic the self-assembly behaviors of army ants. Most of their simulations were done in  2D, so this project aims to create a framework for modeling similar behaviors and rulesets in 3D using the open source environment Webots. 
@@ -30,7 +32,9 @@ As of 8/2/2021, the flippies can relatively reliably walk on the floor and each 
 ---
 
 ## 2 | Environment Setup & Quick Start
+
 *Section created by J. Zerez (Spring 2021)*
+
 *Section modified by J. Brettle (Summer 2021)*
 
 **TL;DR: Download [Webots](https://cyberbotics.com/), Install a [C/C++ Compiler for Webots](https://cyberbotics.com/doc/guide/using-cpp) and make sure you have Python v3+. Then run a `.wbt` file from the worlds folder.**
@@ -46,7 +50,9 @@ For best viewing, go to "Optional Rendering" under the "View" menu and select "S
 ---
 
 ## 3 | File Structure
+
 *Section created by J. Zerez (Spring 2021)*
+
 *Section modified by J. Brettle (Summer 2021)*
 
 ### `./controllers` Directory
@@ -75,7 +81,9 @@ This contains outputs from the [`make_flippys.py`](/make_flippys.py) script (if 
 ---
 
 ## 4 | Useful Resources & References
+
 *Section created by J. Zerez (Spring 2021)*
+
 *Section modified by J. Brettle (Summer 2021)*
 
 ### This Repo's Wiki
@@ -105,7 +113,9 @@ This contains outputs from the [`make_flippys.py`](/make_flippys.py) script (if 
 ---
 
 ## 5 | Recommendations & Next Steps
+
 *Section created by J. Zerez (Spring 2021)*
+
 *Section modified by J. Brettle (Summer 2021)*
 
 - Implement flippy-to-flippy fixed joints (see "The usage of exclusively "flippy-to-floor" fixed joints as opposed to including "flippy-to-flippy" fixed joints" section).
