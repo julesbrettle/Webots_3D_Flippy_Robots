@@ -2,26 +2,26 @@
 
 ### Table of Contents
 
-1. [Project Purpose and Progress](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-2. [Environment Setup](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-3. [How/What to Run](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-4. [File Structure](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-    1. `[./controllers` Directory](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-    2. `[./plugins` Directory](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-    3. `./protos` Directory
-    4. `[./script_inputs` Directory](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-    5. `[./script_outputs` Directory](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-5. [Useful Resources](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-    1. [Creating a Physics Plug-in with ODE](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-    2. [Webots General Documentation](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-6. [Recommendations and Next Steps](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
-7. [References](https://www.notion.so/readme-9792d037b02f4d48bae039c7a5541738)
+1. [Project Purpose and Progress](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#1--project-purpose-and-progress)
+2. [Environment Setup & Quick Start](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#2--environment-setup--quick-start)
+3. [File Structure](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#3--file-structure)
+    - [`./controllers` Directory](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#controllers-directory)
+    - [`./plugins` Directory](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#plugins-directory)
+    - [`./protos` Directory](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#protos-directory)
+    - [`./script_inputs` Directory](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#script_inputs-directory)
+    - [`./script_outputs` Directory](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#script_outputs-directory)
+4. [Useful Resources & References](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#4--useful-resources--references)
+    - [This Repo's Wiki](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#this-repos-wiki)
+    - [Creating a Physics Plug-in with ODE](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#creating-a-physics-plug-in-with-ode)
+    - [Webots General Documentation](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#creating-a-physics-plug-in-with-ode)
+    - [Conceptual](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#conceptual)
+5. [Recommendations and Next Steps](https://github.com/julesbrettle/Webots_3D_Flippy_Robots/blob/main/README.md#5--recommendations--next-steps)
 
 ## 1 | Project Purpose and Progress
 
 This project builds upon the research done by Lucie Houel, Melinda Malley, and others in using "flippy" robots (modeled as two spheres that flip around each other to walk forwards and over each other) to mimic the self-assembly behaviors of army ants. Most of their simulations were done in  2D, so this project aims to create a framework for modeling similar behaviors and rulesets in 3D using the open source environment Webots. 
 
-As of 8/2/2021, the flippies can relatively reliably walk on the floor and each other. They use their four touch sensors to differentiate between touching another flippy and the floor, and change their behavior as such (see "The . They have the ability to change heading and navigate across the floor using two extra motors for turning, as well as a GPS and Inertial Unit for guidance. Their current default mode is to turn to face and walk toward the first `goalCoords` point given (see "Flippy steering" section). The flippies also take longer between flips as they near the first given `slowCoords` point in order to create traffic to facilitate self-assembly (see "Flip delay / distance variable speed control" section). 
+As of 8/2/2021, the flippies can relatively reliably walk on the floor and each other. They use their four touch sensors to differentiate between touching another flippy and the floor, and change their behavior as such (see "The 4 touch sensors theory" section). They have the ability to change heading and navigate across the floor using two extra motors for turning, as well as a GPS and Inertial Unit for guidance. Their current default mode is to turn to face and walk toward the first `goalCoords` point given (see "Flippy steering" section). The flippies also take longer between flips as they near the first given `slowCoords` point in order to create traffic to facilitate self-assembly (see "Flip delay / distance variable speed control" section). 
 
 ---
 
@@ -33,7 +33,7 @@ The simulation is built off of [Webots](https://cyberbotics.com/), which is an o
 
 Additional python scripts have also been created in order to make the process of creating Webots simulations and worlds a bit more streamlined. Make sure you have some kind of Python version 3.
 
-In Webots, one can choose to open and run [`flippy_sim.wbt`](notion://www.notion.so/jbrettle/worlds/flippy_sim.wbt). It usually contains a singular flippy and can be useful for testing flippy parameters and geometries. Run `flippy_sim_autogenerated.wbt` for more flippies (see "Using flippy_sim_autogenerated and Script Inputs").
+In Webots, one can choose to open and run [`flippy_sim.wbt`](/worlds/flippy_sim.wbt). It usually contains a singular flippy and can be useful for testing flippy parameters and geometries. Run `flippy_sim_autogenerated.wbt` for more flippies (see "Using flippy_sim_autogenerated and Script Inputs").
 
 For best viewing, go to "Optional Rendering" under the "View" menu and select "Show Coordinate System" and "Show All Bounding Objects". "Show Contact Points" can also be a useful feature for debugging. 
 
@@ -43,11 +43,11 @@ For best viewing, go to "Optional Rendering" under the "View" menu and select "S
 
 ### `./controllers` Directory
 
-The `./controllers` directory contains folders for each of the controller files. **The main controller for this project can be found in [flippy_controller.cpp](notion://www.notion.so/jbrettle/controllers/flippy_controller/flippy_controller.cpp)**. Changing this file is the key to modifying flippy behavior.
+The `./controllers` directory contains folders for each of the controller files. **The main controller for this project can be found in [flippy_controller.cpp](controllers/flippy_controller/flippy_controller.cpp)**. Changing this file is the key to modifying flippy behavior.
 
 ### `./plugins` Directory
 
-This contains folders for various custom physics plugin files. **This project relies on a custom physics plugins which can be found in [flippy_physics.cpp](notion://www.notion.so/jbrettle/plugins/physics/flippy_physics/flippy_physics.cpp)**. For more information about custom physics plugins, checkout [Webot's Documentation on physics plugins.](https://cyberbotics.com/doc/reference/physics-plugin)
+This contains folders for various custom physics plugin files. **This project relies on a custom physics plugins which can be found in [flippy_physics.cpp](/plugins/physics/flippy_physics/flippy_physics.cpp)**. For more information about custom physics plugins, checkout [Webot's Documentation on physics plugins.](https://cyberbotics.com/doc/reference/physics-plugin)
 
 ### `./protos` Directory
 
