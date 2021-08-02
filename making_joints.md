@@ -1,8 +1,0 @@
-# How Joints are created
-A significant part of this project was working to figure out how to effectively create joints between flippys and their environment. This page will describe how the joints are crated and the methods that do not work.
-
-## What worked
-Each flippy is given a unique name in the form of "F###", where ### is a zero-padded integer that represents the index of the flippy. For instance, The first flippy in the swarm is called `F000`, and the second is called `F001` and so on. Each spherical node of each flippy is given a name derived from its parent flippy name. The first flippy will have nodes named `F000_S1` and `F000_S2`. As the flippy starts to rotate, if the moving sphere (ie: the one actually translating through space) touches another body, the [controller script](./controllers/flippy_controller/flippy_controller.cpp) sends a message to the [physics plug-in](./plugins/physics/flippy_physics/flippy_physics.cpp) with the name of the moving sphere. The physics plug-in freezes the sphere in place by adding a fixed joint between it and the floor of the world. An offset is added so that it gets fixed in place rather than snapping to the origin of the world. The other sphere gets unlocked, allowing for free rotation. 
-
-## What didn't work
-* **Using Webot's [connector objects](https://cyberbotics.com/doc/reference/connector)**: The main problem with this strategy is that these connectors do not support many simultaneous connections. In other-words, only one flippy can connect to the floor at a time, unless the floor had a connector object for each flippy in the swarm, which would be inefficient and slow.
