@@ -124,5 +124,7 @@ This contains outputs from the [`make_flippys.py`](/make_flippys.py) script (if 
     - Create a way for flippies to switch to the next point in the `goalCoods` list when they are within the error margin (the fourth/last element in each row)
     - Create a way for flippies to use all of the points in `slowCoords` instead of just the first row
 - Continue to adjust rulesets and parameters to more reliably create desired behaviors, and document effects of different changes.
+- Test valley traversal on valley angles of 90 degrees or greater so that exact placement of the first flippy isn't required for complete bridge disassembly. Try to get this to work for more random positions and orientations of flippies. 
+- Test valley traversal where flippies aren't all in the same plane (e.g. four flippies in a square rather than a line)
 
 ---
