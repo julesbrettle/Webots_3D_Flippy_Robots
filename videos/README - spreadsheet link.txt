@@ -1,0 +1,1 @@
+Check out the spreadsheet discussing what is happening in each video at https://docs.google.com/spreadsheets/d/1iJKM8tEDC24Z-XHf7DYLqorVNwzXMYJdZu9t7BR2ROM/edit?usp=sharing
